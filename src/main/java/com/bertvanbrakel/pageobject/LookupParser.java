@@ -1,12 +1,8 @@
 package com.bertvanbrakel.pageobject;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.bertvanbrakel.lang.Check.checkNotNull;
 
 import org.apache.commons.lang.StringUtils;
-import org.openqa.selenium.By;
-
-import static com.bertvanbrakel.lang.Check.*;
 public class LookupParser {
 
 	private String chars;

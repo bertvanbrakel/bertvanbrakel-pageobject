@@ -14,7 +14,7 @@ public class Element implements Widget {
 
     private final Finder<WebElement> finder;
 
-    public Element(final Finder<WebElement> finder){
+    public Element(final WebElementFinder finder){
     	checkNotNull("finder", finder);
         this.finder = finder;
     }
