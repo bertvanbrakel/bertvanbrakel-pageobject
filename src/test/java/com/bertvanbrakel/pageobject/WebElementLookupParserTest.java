@@ -1,14 +1,14 @@
 package com.bertvanbrakel.pageobject;
 
-import static com.bertvanbrakel.lang.matcher.IsCollectionOf.containsItem;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.codemucker.jmatch.AList;
+import org.codemucker.jmatch.AnInstance;
+import org.codemucker.jmatch.Expect;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -26,7 +26,7 @@ public class WebElementLookupParserTest {
 
     @Test
     public void test_parse_single_lookup() {
-        assertThat( WebElementLookupParser.parse("id=a"),containsItem(equalTo(By.id("a"))));
+        Expect.that(WebElementLookupParser.parse("id=a")).is(AList.withOnly(AnInstance.equalTo(By.id("a"))));
     }
 
     @Test

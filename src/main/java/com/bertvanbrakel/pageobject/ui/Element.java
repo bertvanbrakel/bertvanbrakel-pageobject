@@ -1,6 +1,6 @@
 package com.bertvanbrakel.pageobject.ui;
 
-import static com.bertvanbrakel.lang.Check.checkNotNull;
+import static org.codemucker.lang.Check.checkNotNull;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 

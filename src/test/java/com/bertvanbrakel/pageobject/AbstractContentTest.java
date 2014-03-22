@@ -7,14 +7,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codemucker.testserver.TestServer;
+import org.codemucker.testserver.TestServlet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.runner.RunWith;
-
-import com.bertvanbrakel.testserver.TestServer;
-import com.bertvanbrakel.testserver.TestServlet;
 
 @RunWith(Theories.class)
 public abstract class AbstractContentTest {

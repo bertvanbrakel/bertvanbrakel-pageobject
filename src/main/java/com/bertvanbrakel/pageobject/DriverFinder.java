@@ -1,7 +1,7 @@
 package com.bertvanbrakel.pageobject;
 
-import static com.bertvanbrakel.lang.Check.checkNoNullItems;
-import static com.bertvanbrakel.lang.Check.checkNotNull;
+import static org.codemucker.lang.Check.checkNoNullItems;
+import static org.codemucker.lang.Check.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;

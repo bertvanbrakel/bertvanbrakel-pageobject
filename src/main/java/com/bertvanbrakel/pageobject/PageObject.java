@@ -1,7 +1,7 @@
 package com.bertvanbrakel.pageobject;
 
-import static com.bertvanbrakel.lang.Check.checkNotNull;
-import static com.bertvanbrakel.lang.Converter.toListEmptyIfNull;
+import static org.codemucker.lang.Check.checkNotNull;
+import static org.codemucker.lang.Converter.toListEmptyIfNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

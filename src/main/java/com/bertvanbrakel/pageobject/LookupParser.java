@@ -1,6 +1,6 @@
 package com.bertvanbrakel.pageobject;
 
-import static com.bertvanbrakel.lang.Check.checkNotNull;
+import static org.codemucker.lang.Check.checkNotNull;
 
 import org.apache.commons.lang.StringUtils;
 public class LookupParser {

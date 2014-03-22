@@ -1,6 +1,6 @@
 package com.bertvanbrakel.pageobject;
 
-import static com.bertvanbrakel.lang.Check.checkTrue;
+import static org.codemucker.lang.Check.checkTrue;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
