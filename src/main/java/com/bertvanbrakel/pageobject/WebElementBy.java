@@ -7,8 +7,9 @@ import org.openqa.selenium.By;
 
 import com.bertvanbrakel.pageobject.LookupParser.ParseCallback;
 
-public class WebElementLookupParser {
-	public static List<By> parse(String expression) throws ParseException {
+public class WebElementBy {
+	
+	public static List<By> expression(String expression) throws ParseException {
 		final List<By> bys = new ArrayList<By>();
 		ParseCallback callback = new ParseCallback() {
 			@Override

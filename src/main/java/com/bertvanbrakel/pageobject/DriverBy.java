@@ -1,5 +1,7 @@
 package com.bertvanbrakel.pageobject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
@@ -7,9 +9,56 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 
+import com.bertvanbrakel.pageobject.LookupParser.ParseCallback;
+
 public abstract class DriverBy {
 
 	public abstract WebDriver find(WebDriver d);
+	
+	/**
+	 * javascript= window.name= window.title= head.title=
+	 * 
+	 * @param expression
+	 * @return
+	 * @throws ParseException
+	 */
+	public static List<DriverBy> expression(String expression) throws ParseException {
+		final List<DriverBy> bys = new ArrayList<DriverBy>();
+		ParseCallback callback = new ParseCallback() {
+			@Override
+			public void found(String name, String value) throws ParseException {
+				name = name.toLowerCase();
+				bys.add(textToMatcher(name, value));
+			}
+		};
+		LookupParser.parse(expression, callback);
+		return bys;
+	}
+
+	private static DriverBy textToMatcher(final String name,
+			final String value) {
+		DriverBy by;
+		if ("windowTitle".equals(name)) {
+			by = DriverBy.windowTitle(value);
+		} else if ("headTitle".equals(name)) {
+			by = DriverBy.headTitle(value);
+		} else if ("windowName".equals(name)) {
+			by = DriverBy.windowName(value);
+		} else if ("url".equals(name)) {
+			by = DriverBy.url(value);
+		} else if ("frame".equals(name)) {
+			by = DriverBy.frame(value);
+		} else if ("source".equals(name)) {
+			by = DriverBy.source(value);
+		} else if ("javascript".equals(name)) {
+			by = DriverBy.javascript(value);
+		} else {
+			throw new ParseException(String.format(
+					"Don't know how to lookup window by '%s'", name));
+		}
+		return by;
+	}
+	
 	/**
 	 * Match by window title. Aka what is currently displayed in the browsers window bar
 	 * 
@@ -17,7 +66,7 @@ public abstract class DriverBy {
 	 * @return
 	 */
 	public static DriverBy windowTitle(final String value) {
-		final Matcher<String> valueMatcher = StringMatcher.expression(value);
+		final StringMatcher valueMatcher = StringMatcher.expression(value);
 		return new DriverBy() {
 			@Override
 			public WebDriver find(WebDriver d) {
@@ -31,14 +80,14 @@ public abstract class DriverBy {
 	}
 
 	/**
-	 * Match by the title tag in the head. Thiscan be different to the window title as the title
+	 * Match by the title tag in the head. This can be different to the window title as the title
 	 * could of changed dynamically
 	 * 
 	 * @param value
 	 * @return
 	 */
 	public static DriverBy headTitle(final String value) {
-		final Matcher<String> valueMatcher = StringMatcher.expression(value);
+		final StringMatcher valueMatcher = StringMatcher.expression(value);
 		return new DriverBy() {
 			@Override
 			public WebDriver find(WebDriver d) {
@@ -64,7 +113,7 @@ public abstract class DriverBy {
 	 * @return
 	 */
 	public static DriverBy url(final String value) {
-		final Matcher<String> valueMatcher = StringMatcher.expression(value);
+		final StringMatcher valueMatcher = StringMatcher.expression(value);
 		return new DriverBy() {
 			@Override
 			public WebDriver find(WebDriver d) {
@@ -84,7 +133,7 @@ public abstract class DriverBy {
 	 * @return
 	 */
 	public static DriverBy source(final String value) {
-		final Matcher<String> valueMatcher = StringMatcher.expression(value);
+		final StringMatcher valueMatcher = StringMatcher.expression(value);
 		return new DriverBy() {
 			@Override
 			public WebDriver find(WebDriver d) {
@@ -154,7 +203,7 @@ public abstract class DriverBy {
 	 * @return
 	 */
 	public static DriverBy windowName(final String value) {
-		final Matcher<String> valueMatcher = StringMatcher.expression(value);
+		final StringMatcher valueMatcher = StringMatcher.expression(value);
 		return new DriverBy() {
 			@Override
 			public WebDriver find(WebDriver d) {

@@ -24,7 +24,7 @@ public class DriverFinderTest extends AbstractContentTest {
         serveBodyContent("/test_find_iframe_by_url/b.html", "<div id='div'>B div</div>" );
         servePageContent("/test_find_iframe_by_url/main.html", "<html>Main page<iframe name='a' src='a.html' >No frames A</iframe><iframe name='b' src='b.html'>No frames B</iframe></html>" );
 
-        final WebDriver driver = b.loadDriver();
+        final WebDriver driver = b.createDriver();
         driver.get(getBaseHttpUrl() + "/test_find_iframe_by_url/main.html");
 
         final FramePageMap page = new FramePageMap(driver);
@@ -48,7 +48,7 @@ public class DriverFinderTest extends AbstractContentTest {
         
         servePageContent("/test_find_frame_by_url/main.html", "<html><frameset><frame name='c' src='c.html'/><frame name='a' src='a.html' /><frame name='b' src='b.html'/></frameset></html>" );
 
-        final WebDriver driver = b.loadDriver();
+        final WebDriver driver = b.createDriver();
         driver.get(getBaseHttpUrl() + "/test_find_frame_by_url/main.html");
 
         final FramePageMap page = new FramePageMap(driver);
@@ -67,47 +67,40 @@ public class DriverFinderTest extends AbstractContentTest {
         assertThat(pageA.getDivA().getText(), is(equalTo("A div")));
     }
     
-    private static class FramePageMap {
+    private static class FramePageMap extends PageObject {
 
-    	private final PageObject page;
-    	
 		public FramePageMap(WebDriver driver) {
-			this.page = new PageObject(driver);
+			super(new DriverFinder(driver,"url=ant:*/main.html"));
 		}
 		
 		public APageMap gotoA(){
-			return new APageMap(new DriverFinder(page, NoRetryPolicyProvider.INSTANCE, "frame=a"));
+			return new APageMap(this);
 		}
 		
 		public BPageMap gotoB(){
-			return new BPageMap(new DriverFinder(page, NoRetryPolicyProvider.INSTANCE, "frame=b"));
+			return new BPageMap(this);
 		}
     }
     
-    private static class APageMap {
+    private static class APageMap extends PageObject {
 
-    	private final PageObject page;
-    	
-		public APageMap( final DriverFinder finder) {
-			this.page = new PageObject(finder);
+		public APageMap(Provider<WebDriver> driver) {
+			super(new DriverFinder(driver,"frame=a"));
 		}
+		
         public Element getDivA() {
-            return page.find(Element.class,"id=div");
+            return find(Element.class,"id=div");
         }
-    	
     }
     
-    private static class BPageMap {
+    private static class BPageMap extends PageObject {
 
-    	private final PageObject page;
-    	
-		public BPageMap(final DriverFinder finder) {
-			this.page = new PageObject(finder);
+		public BPageMap(Provider<WebDriver> driver) {
+			super(new DriverFinder(driver, "frame=b"));
 		}
 		
         public Element getDivB() {
-            return page.find(Element.class,"id=div");
+            return find(Element.class,"id=div");
         }
-		
     }
 }

@@ -1,6 +1,5 @@
 package com.bertvanbrakel.pageobject;
 
-import static org.codemucker.lang.Check.checkNoNullItems;
 import static org.codemucker.lang.Check.checkNotNull;
 
 import java.lang.ref.WeakReference;
@@ -9,51 +8,51 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class WebElementFinder implements Finder<WebElement> {
+public class WebElementFinder implements Finder<WebElement>, Provider<WebElement> {
+	
+	private static final RetryPolicyProvider DEFAULT_RETRY = new FixedRetryPolicyProvider(1000, 10);
+	
 	/**
-	 * How we walk the DOm to find the element
+	 * How we walk the DOM to find the element
 	 */
 	private final List<By> lookups;
+	
 	/**
 	 * Provides the retry policy when we can't find the element
 	 */
-	private final RetryPolicyProvider retryProvider;
+	public RetryPolicyProvider retryProvider = DEFAULT_RETRY;
 
 	/**
 	 * A reference to the element once we have found it. Used to prevent us
-	 * havign to walk the DOM each time
+	 * having to walk the DOM each time
 	 */
 	private WeakReference<WebElement> cachedElement;
 
-	/**
-	 * Finder to provide the driver to find the element in
-	 */
-	private final Finder<WebDriver> driverFinder;
-
-	public WebElementFinder(Finder<WebDriver> driverFinder,
-			final RetryPolicyProvider retryProvider, final By... lookups) {
-		checkNotNull("driverFinder", driverFinder);
-		checkNotNull("retryPolicyProvider", retryProvider);
-		checkNoNullItems("lookups", lookups);
-		this.driverFinder = driverFinder;
-		this.retryProvider = retryProvider;
-		this.lookups = Arrays.asList(lookups);
+	public SearchContext startingEle;
+	
+	public WebElementFinder(SearchContext startingEle,RetryPolicyProvider retryProvider, String expression) {
+		this(startingEle,retryProvider,WebElementBy.expression(expression));
 	}
-
-	public WebElementFinder(Finder<WebDriver> driverFinder,
-			final RetryPolicyProvider retryProvider, final List<By> lookups) {
-		checkNotNull("driverFinder", driverFinder);
-		checkNotNull("retryPolicyProvider", retryProvider);
-		checkNoNullItems("lookups", lookups);
-		this.driverFinder = driverFinder;
-		this.retryProvider = retryProvider;
+	
+	public WebElementFinder(SearchContext startingEle,RetryPolicyProvider retryProvider, final List<By> lookups) {
+		this.startingEle = startingEle;
+		this.retryProvider = retryProvider==null?DEFAULT_RETRY:retryProvider;
 		this.lookups = lookups;
 	}
-
+	
+	public void setRetryPolicy(RetryPolicyProvider provider){
+		this.retryProvider = provider==null?DEFAULT_RETRY:provider;
+	}
+	
+	@Override
+	public WebElement get() {
+		return find();
+	}
+	
 	@Override
 	public WebElement find() {
 		return internalFind(this.retryProvider);
@@ -73,15 +72,12 @@ public class WebElementFinder implements Finder<WebElement> {
 				return ele;
 			}
 		}
-		ele = internalFindElementBy(driverFinder, retryProvider, lookups);
+		ele = internalFindElementBy(startingEle, retryProvider, lookups);
 		cachedElement = new WeakReference<WebElement>(ele);
 		return ele;
 	}
 
-	private static WebElement internalFindElementBy(
-			final Finder<WebDriver> driverFinder,
-			final RetryPolicyProvider retryProvider, final List<By> bys) {
-		final WebDriver driver = driverFinder.find();
+	private static WebElement internalFindElementBy(final SearchContext startingEle, final RetryPolicyProvider retryProvider, final List<By> bys) {
 		WebElement ele = null;
 		// initially have this as null as we only bother creating one when we
 		// fail
@@ -91,7 +87,7 @@ public class WebElementFinder implements Finder<WebElement> {
 			boolean found = false;
 			while( !found ){
 				try {
-					ele = (ele == null ? driver.findElement(by) : ele.findElement(by));
+					ele = (ele == null ? startingEle.findElement(by) : ele.findElement(by));
 					found = true;
 				} catch (NoSuchElementException e) {
 					if (policy == null) {
@@ -134,4 +130,13 @@ public class WebElementFinder implements Finder<WebElement> {
 		return false;
 	}
 
+	@Override
+	public WebElement findElement(By by) {
+		return get().findElement(by);
+	}
+
+	@Override
+	public List<WebElement> findElements(By by) {
+		return get().findElements(by);
+	}
 }

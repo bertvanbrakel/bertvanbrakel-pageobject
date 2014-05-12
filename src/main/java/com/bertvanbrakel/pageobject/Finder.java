@@ -1,14 +1,10 @@
 package com.bertvanbrakel.pageobject;
 
+import org.openqa.selenium.SearchContext;
+//TODO:merge with provider
+public interface Finder<E> extends SearchContext { //, Provider<E> {
 
-public interface Finder<E> {
-
-	/**
-	 * Find our element, retrying if required.
-	 * @return
-	 */
 	public E find();
-	
 	public E find(RetryPolicyProvider policyProvider);
 	
 

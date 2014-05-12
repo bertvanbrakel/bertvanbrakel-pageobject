@@ -1,5 +1,7 @@
 package com.bertvanbrakel.pageobject.ui;
 
+import com.bertvanbrakel.pageobject.WebElementFinder;
+
 
 /**
  * Marker interface
@@ -9,4 +11,5 @@ package com.bertvanbrakel.pageobject.ui;
  */
 public interface Widget {
 
+	public void setFinder(WebElementFinder finder);
 }

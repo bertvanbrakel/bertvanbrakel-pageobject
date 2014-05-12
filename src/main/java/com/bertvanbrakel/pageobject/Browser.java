@@ -9,8 +9,11 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 public enum Browser {
 	FIREFOX,IE,CHROME,HTMLUNIT;
 	
+	public Driver createProvider(){
+		return new Driver(createDriver());
+	}
 	
-	public WebDriver loadDriver(){
+	public WebDriver createDriver(){
 		switch(this){
 		case FIREFOX: return new FirefoxDriver();
 		case IE: return new InternetExplorerDriver();

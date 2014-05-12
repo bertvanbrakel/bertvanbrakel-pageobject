@@ -26,7 +26,7 @@ public class DriverUtils {
 //		return col;
 //	}
 //	
-	public static Object javascript(WebDriver d, String js){
+	public static Object executeJavascript(WebDriver d, String js){
 		if( d != null && d instanceof JavascriptExecutor){
 			Object ret = ((JavascriptExecutor)d).executeScript(js, "");
 			System.out.println(js);

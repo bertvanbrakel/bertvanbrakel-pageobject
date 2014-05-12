@@ -3,6 +3,11 @@ package com.bertvanbrakel.pageobject;
 import static org.codemucker.lang.Check.checkNotNull;
 
 import org.apache.commons.lang.StringUtils;
+
+/**
+ * Provides the basic functionality to parse driver or element lookup expressions
+ * 
+ */
 public class LookupParser {
 
 	private String chars;

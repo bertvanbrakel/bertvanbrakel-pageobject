@@ -71,8 +71,8 @@ public class LookupParserTest {
    }
     
     private static class Pair {
-    	public String name;
-    	public String value;
+    	public final String name;
+    	public final String value;
 		public Pair(String name, String value) {
 			super();
 			this.name = name;

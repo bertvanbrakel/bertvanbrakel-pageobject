@@ -2,8 +2,22 @@ package com.bertvanbrakel.pageobject;
 
 import java.util.regex.Pattern;
 
-public abstract class StringMatcher implements Matcher<String> {
+public abstract class StringMatcher {
 
+	protected abstract boolean matches(String actual);
+	
+	protected static StringMatcher expression(final String expect) {
+		if (expect.startsWith("exact:")) {
+			return exact(expect.substring(6));
+		} else if (expect.startsWith("re:")) {
+			return regExp(expect.substring(3));
+		} else if (expect.startsWith("ant:")) {
+			return antExp(expect.substring(4));
+		} else {
+			return antExp(expect);
+		}
+	}
+	
 	public static StringMatcher exact(final String expect){
 		return new StringMatcher() {
 			@Override
@@ -33,29 +47,19 @@ public abstract class StringMatcher implements Matcher<String> {
 		};
 	}
 	
-	protected static StringMatcher expression(final String expect) {
-		if (expect.startsWith("exact:")) {
-			return exact(expect.substring(6));
-		} else if (expect.startsWith("re:")) {
-			return regExp(expect.substring(3));
-		} else {
-			return antExp(expect);
-		}
-	}
-	
 	protected static String stringToAntRegExp(String s) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			switch (c) {
 			case '*':
+				sb.append(".*");
+				break;
 			case '?':
-				sb.append('.');
-				sb.append(c);
+				sb.append(".{1}");
 				break;
 			case '.':
-				sb.append('\\');
-				sb.append(c);
+				sb.append("\\.");
 				break;
 			default:
 				sb.append(c);

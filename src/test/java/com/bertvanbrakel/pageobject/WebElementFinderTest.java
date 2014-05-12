@@ -14,10 +14,10 @@ public class WebElementFinderTest extends AbstractContentTest {
     public void ensure_finder_can_find(Browser b) {
         serveBodyContent("/ensure_finder_can_find", "<div id='a'>A<div id='b'>B</div></div>");
 
-        final WebDriver driver = b.loadDriver();
+        final WebDriver driver = b.createDriver();
         driver.get(getBaseHttpUrl() + "/ensure_finder_can_find");
-        final WebElementFinder finder = new WebElementFinder(new SimpleDriverFinder(driver),NoRetryPolicyProvider.INSTANCE, By.id("b"));
-        final WebElement ele = finder.find();
+        final WebElementFinder finder = new WebElementFinder(driver,NoRetryPolicyProvider.INSTANCE, "id=b");
+        final WebElement ele = finder.get();
         assertNotNull(ele);
         assertEquals( "B", ele.getText() );
     }

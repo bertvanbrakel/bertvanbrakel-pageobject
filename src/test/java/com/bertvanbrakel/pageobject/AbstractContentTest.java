@@ -47,6 +47,22 @@ public abstract class AbstractContentTest {
         return server;
     }
 
+    /**
+     * Serve up the given resource via the test server at the given path expession
+     * 
+     * @param servletPath path to the resource
+     * @param bodyContent the resource content
+     */
+    protected void serveBodyContent(final String servletPath, final CharSequence bodyContent){
+        servePageContent(servletPath, "<html><head></head><body>" + bodyContent + "</body></html>");
+    }
+    
+    /**
+     * Serve up the given resource via the test server at the given path
+     * 
+     * @param servletPath
+     * @param content
+     */
     protected void servePageContent(final String servletPath, final CharSequence content){
         server.addServlet(servletPath, new TestServlet() {
             private static final long serialVersionUID = -8435089373543974573L;
@@ -61,10 +77,6 @@ public abstract class AbstractContentTest {
                 w.flush();
             }
         });
-    }
-
-    protected void serveBodyContent(final String servletPath, final CharSequence bodyContent){
-        servePageContent(servletPath, "<html><head></head><body>" + bodyContent + "</body></html>");
     }
 
     protected String getBaseHttpUrl(){
